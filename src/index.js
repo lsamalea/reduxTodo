@@ -1,6 +1,6 @@
 import { combineReducers, createStore } from "redux";
 import PropTypes from 'prop-types';
-
+import {Provider, connect} from 'react-redux';
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -93,38 +93,6 @@ const getVisiblesTodos = (todos, filter) => {
   }
 };
 
-class VisibleTodoList extends React.Component {
-  componentWillMount() {
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe(() => {
-      this.forceUpdate();
-    });
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-  render() {
-    const { store } = this.context;
-    const { todos, visibilityFilter } = store.getState();
-    const visibles = getVisiblesTodos(todos, visibilityFilter);
-    return (
-      <TodoList
-        todos={visibles}
-        onTodoClick={id => {
-          store.dispatch({
-            type: TOGGLE_TODO_TYPE,
-            id
-          });
-        }}
-      />
-    );
-  }
-}
-
-VisibleTodoList.contextTypes = {
-  store : PropTypes.object
-}
-
 const Todo = ({ completed, text, onClick }) => (
   <li
     onClick={onClick}
@@ -143,6 +111,28 @@ const TodoList = ({ todos, onTodoClick }) => (
     ))}
   </ul>
 );
+
+const mapStateToProps = (state)=>({
+  todos: getVisiblesTodos(state.todos, state.visibilityFilter),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onTodoClick : id => {
+    dispatch({
+      type: TOGGLE_TODO_TYPE,
+      id
+    });
+  }
+});
+
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList);
+
+VisibleTodoList.contextTypes = {
+  store : PropTypes.object
+}
 
 const addClickHandler = (store,text) => {  
   store.dispatch({
@@ -243,24 +233,6 @@ const TodoApp = () => (
     <span> Active Filter : {visibilityFilter}</span>
   </div>
 );
-
-class Provider extends React.Component {
-  /**
-   * if you use getChildContext, remember declare childContextTypes!!
-   */
-  getChildContext() {    
-    return {
-      store: this.props.store
-    };
-  }
-  render() {
-    return this.props.children;
-  }
-}
-
-Provider.childContextTypes = {
-  store: PropTypes.object
-};
 
 ReactDOM.render(
   <Provider store={createStore(todoReducerApp)}>
