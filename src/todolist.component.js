@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import React from "react";
 
 import { getVisiblesTodos } from './helpers'
-import { TOGGLE_TODO_TYPE } from "./reducers";
 import { Todo } from './todo.component'
+import { toogleTodo } from "./action.creators";
 
 const TodoList = ({ todos, onTodoClick }) => (
   <ul>
@@ -20,10 +20,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onTodoClick: id => {
-    dispatch({
-      type: TOGGLE_TODO_TYPE,
-      id
-    });
+    dispatch(
+        toogleTodo
+    );
   }
 });
 
@@ -31,6 +30,6 @@ export const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(
   TodoList
 );
 
-VisibleTodoList.contextTypes = {
-  store: PropTypes.object
-};
+// VisibleTodoList.contextTypes = {
+//   store: PropTypes.object
+// };

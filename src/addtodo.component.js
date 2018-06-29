@@ -1,19 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-
-import { 
-    ADD_TODO_TYPE,  
-} from './reducers'
-
-const addClickHandler = (dispatch, text) => {
-  dispatch({
-    type: ADD_TODO_TYPE,
-    text,
-    id: nextTodo++
-  });
-};
+import {addTodo} from "./action.creators";
 
 let nextTodo = 0;
+const addClickHandler = (dispatch, text) => {
+  dispatch(addTodo(text, nextTodo++));
+};
+
 export const AddTodo = connect()(({ dispatch }) => {
   let input;
   return (
@@ -42,5 +35,7 @@ export const AddTodo = connect()(({ dispatch }) => {
 });
 
 // AddTodo.contextTypes = {
+
 //   store: PropTypes.object
+
 // };
