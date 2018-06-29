@@ -1,12 +1,12 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import { connect } from "react-redux";
 
 import { 
     ADD_TODO_TYPE,  
 } from './reducers'
 
-const addClickHandler = (store, text) => {
-  store.dispatch({
+const addClickHandler = (dispatch, text) => {
+  dispatch({
     type: ADD_TODO_TYPE,
     text,
     id: nextTodo++
@@ -14,7 +14,7 @@ const addClickHandler = (store, text) => {
 };
 
 let nextTodo = 0;
-export const AddTodo = (props, { store }) => {
+export const AddTodo = connect()(({ dispatch }) => {
   let input;
   return (
     <div>
@@ -24,14 +24,14 @@ export const AddTodo = (props, { store }) => {
         }}
         onKeyDown={e => {
           if (e.key === "Enter") {
-            addClickHandler(store, input.value);
+            addClickHandler(dispatch, input.value);
             input.value = "";
           }
         }}
       />
       <button
         onClick={() => {
-          addClickHandler(store, input.value);
+          addClickHandler(dispatch, input.value);
           input.value = "";
         }}
       >
@@ -39,8 +39,8 @@ export const AddTodo = (props, { store }) => {
       </button>
     </div>
   );
-};
+});
 
-AddTodo.contextTypes = {
-  store: PropTypes.object
-};
+// AddTodo.contextTypes = {
+//   store: PropTypes.object
+// };
