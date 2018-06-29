@@ -2,7 +2,8 @@ import { ADD_TODO_TYPE, SET_VISIBILITY_FILTER_TYPE, TOGGLE_TODO_TYPE } from "./r
 
 export const addTodo = (text, id) => ({
   type: ADD_TODO_TYPE,
-  text
+  text,
+  id
 });
 
 export const setVisibilityFilter = filter => ({
